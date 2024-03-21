@@ -39,6 +39,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
+import org.eclipse.wst.common.frameworks.internal.plugin.WTPCommonPlugin;
 
 public class NewFilterClassDataModelProvider extends
 		NewWebClassDataModelProvider {
@@ -53,14 +54,15 @@ public class NewFilterClassDataModelProvider extends
 	@Override
 	public boolean isPropertyEnabled(String propertyName) {
 		if (ABSTRACT_METHODS.equals(propertyName)) {
-			return false;
-		} else if (INIT.equals(propertyName)) {
-			return false;
-		} else if (DESTROY.equals(propertyName)) {
-			return false;
-		} else if (DO_FILTER.equals(propertyName)) {
-			return false;
+			return FilterSupertypesValidator.isFilterSuperclass(model);
+		} else if (INIT.equals(propertyName) || 
+				DESTROY.equals(propertyName) ||
+				DO_FILTER.equals(propertyName)) {
+			boolean genericFilter = FilterSupertypesValidator.isFilterSuperclass(model);
+			boolean inherit = model.getBooleanProperty(ABSTRACT_METHODS);
+			return genericFilter && inherit;
 		}
+
 		// Otherwise return super implementation
 		return super.isPropertyEnabled(propertyName);
 	}
@@ -114,11 +116,16 @@ public class NewFilterClassDataModelProvider extends
 	 */
     @Override
 	public Object getDefaultProperty(String propertyName) {
-        if (propertyName.equals(DESTROY))
-            return Boolean.TRUE;
-		else if (propertyName.equals(DO_FILTER))
-            return Boolean.TRUE;
-        else if (propertyName.equals(INIT))
+		// Generate a init and destroy methods by default only if a class
+		// not extending HttpFilter
+		if (propertyName.equals(DESTROY) || propertyName.equals(INIT)) {
+			if (!(FilterSupertypesValidator.isHttpFilterSuperclass(model))) {
+				return Boolean.TRUE;
+			}
+			return Boolean.FALSE;
+		}
+
+        if (propertyName.equals(DO_FILTER))
             return Boolean.TRUE;
 		else if (propertyName.equals(FILTER_MAPPINGS))
 			return getDefaultFilterMapping();
@@ -172,6 +179,9 @@ public class NewFilterClassDataModelProvider extends
 		// If our default is the superclass, we know it is ok
 		if (propertyName.equals(SUPERCLASS) && "".equals(getStringProperty(propertyName))) //$NON-NLS-1$
 			return WebPlugin.OK_STATUS;
+		// check superclass
+		if (propertyName.equals(SUPERCLASS)) 
+			return validateSuperClassName(getStringProperty(propertyName));
 		// Validate init params
 		if (propertyName.equals(INIT_PARAM))
 			return validateInitParamList((List) getProperty(propertyName));
@@ -184,6 +194,32 @@ public class NewFilterClassDataModelProvider extends
 		
 		// Otherwise defer to super to validate the property
 		return super.validate(propertyName);
+	}
+
+	/**
+	 * Subclasses may extend this method to provide their own validation of the specified java
+	 * classname. This implementation will ensure the class name is not set to Servlet and then will
+	 * forward on to the NewJavaClassDataModel to validate the class name as valid java. This method
+	 * does not accept null as a parameter. It will not return null. 
+	 * It will check if the super class extends the javax.servlet.Servlet interface also.
+	 * 
+	 * @param className
+	 * @return IStatus is java classname valid?
+	 */
+	protected IStatus validateSuperClassName(String superclassName) {
+		//If the servlet implements javax.servlet.Servlet, we do not need a super class
+		if (FilterSupertypesValidator.isFilterSuperclass(model))
+			return WTPCommonPlugin.OK_STATUS;
+		
+		// Check the super class as a java class
+		IStatus status = null;
+		if (superclassName.trim().length() > 0) {
+			status = super.validate(SUPERCLASS);
+			if (status.getSeverity() == IStatus.ERROR)
+				return status;
+		}
+				
+		return status;
 	}
 
 	/**
@@ -300,9 +336,14 @@ public class NewFilterClassDataModelProvider extends
 	private List getFilterInterfaces() {
 		if (interfaceList == null) {
 			interfaceList = new ArrayList<String>(FILTER_INTERFACES.length);
-			// Add minimum required list of servlet interfaces to be implemented
+			// Add minimum required list of filter interfaces to be implemented
 			for (int i = 0; i < FILTER_INTERFACES.length; i++) {
 				interfaceList.add(FILTER_INTERFACES[i]);
+			}
+			// Remove the javax.servlet.Filter interface from the list if the
+			// superclass already implements it
+			if (FilterSupertypesValidator.isFilterSuperclass(model)) {
+				interfaceList.remove(IServletConstants.QUALIFIED_FILTER);
 			}
 		}
 		// Return interface list
@@ -322,9 +363,14 @@ public class NewFilterClassDataModelProvider extends
 	private List<String> getJakartaFilterInterfaces() {
 		if (jakartaInterfaceList == null) {
 			jakartaInterfaceList = new ArrayList<String>(JAKARTA_FILTER_INTERFACES.length);
-			// Add minimum required list of servlet interfaces to be implemented
+			// Add minimum required list of filter interfaces to be implemented
 			for (int i = 0; i < JAKARTA_FILTER_INTERFACES.length; i++) {
 				jakartaInterfaceList.add(JAKARTA_FILTER_INTERFACES[i]);
+			}
+			// Remove the jakarta.servlet.Filter interface from the list if the
+			// superclass already implements it
+			if (FilterSupertypesValidator.isFilterSuperclass(model)) {
+				jakartaInterfaceList.remove(IServletConstants.QUALIFIED_JAKARTA_FILTER);
 			}
 		}
 		// Return interface list
@@ -402,7 +448,36 @@ public class NewFilterClassDataModelProvider extends
 			model.notifyPropertyChange(FILTER_MAPPINGS, IDataModel.DEFAULT_CHG);
 		} 
 		
-		return super.propertySet(propertyName, propertyValue);
+		boolean result = false;		
+		if (SUPERCLASS.equals(propertyName)) {
+			model.notifyPropertyChange(ABSTRACT_METHODS, IDataModel.ENABLE_CHG);
+			model.notifyPropertyChange(INIT, IDataModel.ENABLE_CHG);
+			model.notifyPropertyChange(DESTROY, IDataModel.ENABLE_CHG);
+			model.notifyPropertyChange(DO_FILTER, IDataModel.ENABLE_CHG);
+			
+			if (!hasSuperClass()) {
+				model.setProperty(ABSTRACT_METHODS, null);
+				model.setProperty(INIT, null);
+				model.setProperty(DESTROY, null);
+				model.setProperty(DO_FILTER, null);
+			}
+			
+			model.notifyPropertyChange(ABSTRACT_METHODS, IDataModel.DEFAULT_CHG);
+			model.notifyPropertyChange(INIT, IDataModel.DEFAULT_CHG);
+			model.notifyPropertyChange(DESTROY, IDataModel.DEFAULT_CHG);
+			model.notifyPropertyChange(DO_FILTER, IDataModel.DEFAULT_CHG);
+			
+			if (!FilterSupertypesValidator.isFilterSuperclass(model)) {
+				List ifaces = (List) model.getProperty(INTERFACES);
+				if (projectUsesJakartaPackages()) {
+					ifaces.add(QUALIFIED_JAKARTA_FILTER);
+				} else {
+					ifaces.add(QUALIFIED_FILTER);
+				}
+			}
+		}
+		
+		return result || super.propertySet(propertyName, propertyValue);
 	}
 
 }

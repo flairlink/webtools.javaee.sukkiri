@@ -31,6 +31,8 @@ public class WebFacetUtils {
 	public static final IProjectFacetVersion WEBFRAGMENT_30 = WEBFRAGMENT_FACET.getVersion("3.0"); //$NON-NLS-1$
 	public static final IProjectFacetVersion WEBFRAGMENT_31 = WEBFRAGMENT_FACET.getVersion("3.1"); //$NON-NLS-1$
 	public static final IProjectFacetVersion WEBFRAGMENT_40 = WEBFRAGMENT_FACET.getVersion("4.0"); //$NON-NLS-1$
+	public static final IProjectFacetVersion WEBFRAGMENT_50 = WEBFRAGMENT_FACET.getVersion("5.0"); //$NON-NLS-1$
+	public static final IProjectFacetVersion WEBFRAGMENT_60 = WEBFRAGMENT_FACET.getVersion("6.0"); //$NON-NLS-1$
 	
 	public static final IProjectFacet WEB_XDOCLET_FACET = getWebDocletFacet();
 	

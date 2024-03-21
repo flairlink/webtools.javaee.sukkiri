@@ -90,5 +90,4 @@ public class NewFilterClassOperation extends NewWebClassOperation {
 	protected FilterTemplate getTemplateImplementation() {
 		return FilterTemplate.create(null);
 	}
-	
 }

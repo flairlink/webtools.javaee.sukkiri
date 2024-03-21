@@ -39,7 +39,7 @@ public class CreateListenerTemplateModel extends CreateWebClassTemplateModel {
 		Collection<String> imports = super.getImports();
 		
 		if (implementServletContextListener()) {
-			if (SERVLET_5_0.equals(getJavaEEVersion())) {
+			if (SERVLET_5_0.equals(getJavaEEVersion()) || SERVLET_6_0.equals(getJavaEEVersion())) {
 				imports.add(IServletConstants.QUALIFIED_JAKARTA_SERVLET_CONTEXT_LISTENER);
 				imports.add(IServletConstants.QUALIFIED_JAKARTA_SERVLET_CONTEXT_EVENT);
 			}
@@ -50,7 +50,7 @@ public class CreateListenerTemplateModel extends CreateWebClassTemplateModel {
 		}
 		
 		if (implementServletContextAttributeListener()) {
-			if (SERVLET_5_0.equals(getJavaEEVersion())) {
+			if (SERVLET_5_0.equals(getJavaEEVersion()) || SERVLET_6_0.equals(getJavaEEVersion())) {
 				imports.add(IServletConstants.QUALIFIED_SERVLET_CONTEXT_ATTRIBUTE_LISTENER);
 				imports.add(IServletConstants.QUALIFIED_SERVLET_CONTEXT_ATTRIBUTE_EVENT);
 			}
@@ -61,7 +61,7 @@ public class CreateListenerTemplateModel extends CreateWebClassTemplateModel {
 		}
 		
 		if (implementHttpSessionListener()) {
-			if (SERVLET_5_0.equals(getJavaEEVersion())) {
+			if (SERVLET_5_0.equals(getJavaEEVersion()) || SERVLET_6_0.equals(getJavaEEVersion())) {
 				imports.add(IServletConstants.QUALIFIED_HTTP_SESSION_LISTENER);
 				imports.add(IServletConstants.QUALIFIED_HTTP_SESSION_EVENT);
 			}
@@ -72,7 +72,7 @@ public class CreateListenerTemplateModel extends CreateWebClassTemplateModel {
 		}
 		
 		if (implementHttpSessionAttributeListener()) {
-			if (SERVLET_5_0.equals(getJavaEEVersion())) {
+			if (SERVLET_5_0.equals(getJavaEEVersion()) || SERVLET_6_0.equals(getJavaEEVersion())) {
 				imports.add(IServletConstants.QUALIFIED_HTTP_SESSION_ATTRIBUTE_LISTENER);
 				imports.add(IServletConstants.QUALIFIED_HTTP_SESSION_BINDING_EVENT);
 			}
@@ -83,7 +83,7 @@ public class CreateListenerTemplateModel extends CreateWebClassTemplateModel {
 		}
 		
 		if (implementHttpSessionActivationListener()) {
-			if (SERVLET_5_0.equals(getJavaEEVersion())) {
+			if (SERVLET_5_0.equals(getJavaEEVersion()) || SERVLET_6_0.equals(getJavaEEVersion())) {
 				imports.add(IServletConstants.QUALIFIED_HTTP_SESSION_ACTIVATION_LISTENER);
 				imports.add(IServletConstants.QUALIFIED_HTTP_SESSION_EVENT);
 			}
@@ -94,7 +94,7 @@ public class CreateListenerTemplateModel extends CreateWebClassTemplateModel {
 		}
 		
 		if (implementHttpSessionBindingListener()) {
-			if (SERVLET_5_0.equals(getJavaEEVersion())) {
+			if (SERVLET_5_0.equals(getJavaEEVersion()) || SERVLET_6_0.equals(getJavaEEVersion())) {
 				imports.add(IServletConstants.QUALIFIED_HTTP_SESSION_BINDING_LISTENER);
 				imports.add(IServletConstants.QUALIFIED_HTTP_SESSION_BINDING_EVENT);
 			}
@@ -105,7 +105,7 @@ public class CreateListenerTemplateModel extends CreateWebClassTemplateModel {
 		}
 		
 		if (implementServletRequestListener()) {
-			if (SERVLET_5_0.equals(getJavaEEVersion())) {
+			if (SERVLET_5_0.equals(getJavaEEVersion()) || SERVLET_6_0.equals(getJavaEEVersion())) {
 				imports.add(IServletConstants.QUALIFIED_SERVLET_REQUEST_LISTENER);
 				imports.add(IServletConstants.QUALIFIED_SERVLET_REQUEST_EVENT);
 			}
@@ -116,7 +116,7 @@ public class CreateListenerTemplateModel extends CreateWebClassTemplateModel {
 		}
 		
 		if (implementServletRequestAttributeListener()) {
-			if (SERVLET_5_0.equals(getJavaEEVersion())) {
+			if (SERVLET_5_0.equals(getJavaEEVersion()) || SERVLET_6_0.equals(getJavaEEVersion())) {
 				imports.add(IServletConstants.QUALIFIED_SERVLET_REQUEST_ATTRIBUTE_LISTENER);
 				imports.add(IServletConstants.QUALIFIED_SERVLET_REQUEST_ATTRIBUTE_EVENT);
 			}
@@ -126,7 +126,7 @@ public class CreateListenerTemplateModel extends CreateWebClassTemplateModel {
 			}
 		}
 		
-		if (SERVLET_5_0.equals(getJavaEEVersion())) {
+		if (SERVLET_5_0.equals(getJavaEEVersion()) || SERVLET_6_0.equals(getJavaEEVersion())) {
 			imports.add(IServletConstants.QUALIFIED_JAKARTA_WEB_LISTENER);
 		}
 		else if (SERVLET_3.equals(getJavaEEVersion()) || SERVLET_3_1.equals(getJavaEEVersion()) || SERVLET_4_0.equals(getJavaEEVersion())){

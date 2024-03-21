@@ -30,6 +30,7 @@ public class CreateWebClassTemplateModel extends
 	public static final String SERVLET_3_1 = "3.1"; //$NON-NLS-1$
 	public static final String SERVLET_4_0 = "4.0"; //$NON-NLS-1$
 	public static final String SERVLET_5_0 = "5.0"; //$NON-NLS-1$
+	public static final String SERVLET_6_0 = "6.0"; //$NON-NLS-1$
 	
 	public CreateWebClassTemplateModel(IDataModel dataModel) {
 		super(dataModel);

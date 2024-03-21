@@ -192,9 +192,14 @@ public abstract class NewWebClassDataModelProvider extends NewJavaClassDataModel
 				return (FacetedProjectFramework.hasProjectFacet(project, WebFacetUtils.WEB_FACET.getId(), WebFacetUtils.WEB_30.getVersionString())
 						|| FacetedProjectFramework.hasProjectFacet(project, WebFacetUtils.WEB_FACET.getId(), WebFacetUtils.WEB_31.getVersionString())
 						|| FacetedProjectFramework.hasProjectFacet(project, WebFacetUtils.WEB_FACET.getId(), WebFacetUtils.WEB_40.getVersionString())
+						|| FacetedProjectFramework.hasProjectFacet(project, WebFacetUtils.WEB_FACET.getId(), WebFacetUtils.WEB_50.getVersionString())
+						|| FacetedProjectFramework.hasProjectFacet(project, WebFacetUtils.WEB_FACET.getId(), WebFacetUtils.WEB_60.getVersionString())
 						|| FacetedProjectFramework.hasProjectFacet(project, WebFacetUtils.WEBFRAGMENT_FACET.getId(), WebFacetUtils.WEBFRAGMENT_30.getVersionString())
 						|| FacetedProjectFramework.hasProjectFacet(project, WebFacetUtils.WEBFRAGMENT_FACET.getId(), WebFacetUtils.WEBFRAGMENT_31.getVersionString())
-						|| FacetedProjectFramework.hasProjectFacet(project, WebFacetUtils.WEBFRAGMENT_FACET.getId(), WebFacetUtils.WEBFRAGMENT_40.getVersionString()));
+						|| FacetedProjectFramework.hasProjectFacet(project, WebFacetUtils.WEBFRAGMENT_FACET.getId(), WebFacetUtils.WEBFRAGMENT_40.getVersionString())
+						|| FacetedProjectFramework.hasProjectFacet(project, WebFacetUtils.WEBFRAGMENT_FACET.getId(), WebFacetUtils.WEBFRAGMENT_50.getVersionString())
+						|| FacetedProjectFramework.hasProjectFacet(project, WebFacetUtils.WEBFRAGMENT_FACET.getId(), WebFacetUtils.WEBFRAGMENT_60.getVersionString())
+						);
 			} catch (CoreException e) {
 				WebPlugin.log(e);
 			}

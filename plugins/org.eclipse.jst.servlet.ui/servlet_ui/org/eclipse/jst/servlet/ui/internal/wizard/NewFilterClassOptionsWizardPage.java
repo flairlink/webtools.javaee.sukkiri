@@ -25,6 +25,8 @@ import org.eclipse.jst.j2ee.internal.web.operations.FilterSupertypesValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
@@ -47,6 +49,27 @@ public class NewFilterClassOptionsWizardPage extends
 	protected void createStubsComposite(Composite parent) {
 		super.createStubsComposite(parent);
 
+		inheritButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				boolean enable = inheritButton.getSelection();
+				enableFilterButtons(enable);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				//Do nothing
+			}
+			
+			private void enableFilterButtons(boolean enable) {
+				if (FilterSupertypesValidator.isFilterSuperclass(model)) {
+					initButton.setEnabled(enable);
+					destroyButton.setEnabled(enable);
+					doFilterButton.setEnabled(enable);
+				}
+			}			
+		});
+		
 		Composite comp = new Composite(methodStubs, SWT.NULL);
 		GridLayout layout = new GridLayout(3, false);
 		layout.marginWidth = 0;

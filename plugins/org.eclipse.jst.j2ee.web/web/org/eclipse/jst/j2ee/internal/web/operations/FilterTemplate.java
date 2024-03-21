@@ -129,7 +129,8 @@ public class FilterTemplate
   protected final String TEXT_103 = NL + "    }"; //$NON-NLS-1$
   protected final String TEXT_104 = NL + NL + "\t/**" + NL + "\t * @see Filter#destroy()" + NL + "\t */" + NL + "\tpublic void destroy() {" + NL + "\t\t// TODO Auto-generated method stub" + NL + "\t}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
   protected final String TEXT_105 = NL + NL + "\t/**" + NL + "\t * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)" + NL + "\t */" + NL + "\tpublic void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {" + NL + "\t\t// TODO Auto-generated method stub" + NL + "\t\t// place your code here" + NL + "" + NL + "\t\t// pass the request along the filter chain" + NL + "\t\tchain.doFilter(request, response);" + NL + "\t}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
-  protected final String TEXT_106 = NL + NL + "\t/**" + NL + "\t * @see Filter#init(FilterConfig)" + NL + "\t */" + NL + "\tpublic void init(FilterConfig fConfig) throws ServletException {" + NL + "\t\t// TODO Auto-generated method stub" + NL + "\t}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+  protected final String TEXT_105_HTTP = NL + NL + "\t/**" + NL + "\t * @see Filter#doFilter(HttpServletRequest, HttpServletResponse, FilterChain)" + NL + "\t */" + NL + "\tpublic void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {" + NL + "\t\t// TODO Auto-generated method stub" + NL + "\t\t// place your code here" + NL + "" + NL + "\t\t// pass the request along the filter chain" + NL + "\t\tchain.doFilter(request, response);" + NL + "\t}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
+    protected final String TEXT_106 = NL + NL + "\t/**" + NL + "\t * @see Filter#init(FilterConfig)" + NL + "\t */" + NL + "\tpublic void init(FilterConfig fConfig) throws ServletException {" + NL + "\t\t// TODO Auto-generated method stub" + NL + "\t}"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
   protected final String TEXT_107 = NL + NL + "}"; //$NON-NLS-1$
   protected final String TEXT_108 = NL;
 
@@ -236,7 +237,7 @@ public class FilterTemplate
 
     stringBuffer.append(TEXT_26);
      
-	if ("3.0".equals(model.getJavaEEVersion()) || "3.1".equals(model.getJavaEEVersion()) || "4.0".equals(model.getJavaEEVersion())) {  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	if ("3.0".equals(model.getJavaEEVersion()) || "3.1".equals(model.getJavaEEVersion()) || "4.0".equals(model.getJavaEEVersion()) || "5.0".equals(model.getJavaEEVersion()) || "6.0".equals(model.getJavaEEVersion())) {  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     stringBuffer.append(TEXT_27);
     
@@ -603,15 +604,19 @@ public class FilterTemplate
 		}
 	} 
 
-     if (model.shouldGenDestroy()) { 
-    stringBuffer.append(TEXT_104);
-     } 
-     if (model.shouldGenDoFilter()) { 
-    stringBuffer.append(TEXT_105);
-     } 
-     if (model.shouldGenInit()) { 
-    stringBuffer.append(TEXT_106);
-     } 
+    if (model.shouldGenDestroy()) { 
+      stringBuffer.append(TEXT_104);
+    } 
+    if (model.shouldGenDoFilter()) {
+      if (model.isHttpFilterSuperclass()) {
+        stringBuffer.append(TEXT_105_HTTP);
+      } else {
+        stringBuffer.append(TEXT_105);
+      }
+    } 
+    if (model.shouldGenInit()) { 
+      stringBuffer.append(TEXT_106);
+    } 
     stringBuffer.append(TEXT_107);
     stringBuffer.append(TEXT_108);
     return stringBuffer.toString();

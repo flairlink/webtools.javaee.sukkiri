@@ -38,6 +38,7 @@ import static org.eclipse.jst.j2ee.internal.web.operations.INewServletClassDataM
 import static org.eclipse.jst.j2ee.internal.web.operations.INewWebClassDataModelProperties.DISPLAY_NAME;
 import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_HTTP_SERVLET;
 import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_SERVLET;
+import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_JAKARTA_SERVLET;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -336,7 +337,11 @@ public class NewServletClassDataModelProvider extends
 			
 			if (!ServletSupertypesValidator.isServletSuperclass(model)) {
 				List ifaces = (List) model.getProperty(INTERFACES);
-				ifaces.add(QUALIFIED_SERVLET);
+				if (projectUsesJakartaPackages()) {
+					ifaces.add(QUALIFIED_JAKARTA_SERVLET);
+				} else {
+					ifaces.add(QUALIFIED_SERVLET);
+				}
 			}
 		}
 		

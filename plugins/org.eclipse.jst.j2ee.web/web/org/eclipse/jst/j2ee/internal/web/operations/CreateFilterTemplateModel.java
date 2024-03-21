@@ -28,6 +28,8 @@ import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_IO_EXCEPTION;
 import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_SERVLET_EXCEPTION;
 import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_SERVLET_REQUEST;
 import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_SERVLET_RESPONSE;
+import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_HTTP_SERVLET_REQUEST;
+import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_HTTP_SERVLET_RESPONSE;
 import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_WEB_FILTER;
 
 import java.util.ArrayList;
@@ -62,7 +64,7 @@ public class CreateFilterTemplateModel extends CreateWebClassTemplateModel {
 		
 		String javaEEVersion = getJavaEEVersion();
 		if (shouldGenInit()) {
-			if (SERVLET_5_0.equals(javaEEVersion)) {
+			if (SERVLET_5_0.equals(javaEEVersion) || SERVLET_6_0.equals(javaEEVersion)) {
 				imports.add(IServletConstants.QUALIFIED_JAKARTA_FILTER_CONFIG);
 				imports.add(IServletConstants.QUALIFIED_JAKARTA_SERVLET_EXCEPTION);
 			}
@@ -73,22 +75,39 @@ public class CreateFilterTemplateModel extends CreateWebClassTemplateModel {
 		}
 		
 		if (shouldGenDoFilter()) {
-			if (SERVLET_5_0.equals(javaEEVersion)) {
-				imports.add(IServletConstants.QUALIFIED_JAKARTA_SERVLET_REQUEST);
-				imports.add(IServletConstants.QUALIFIED_JAKARTA_SERVLET_RESPONSE);
-				imports.add(IServletConstants.QUALIFIED_JAKARTA_FILTER_CHAIN);
-				imports.add(QUALIFIED_IO_EXCEPTION);
-				imports.add(IServletConstants.QUALIFIED_JAKARTA_SERVLET_EXCEPTION);
-			}
-			else {
-				imports.add(QUALIFIED_SERVLET_REQUEST);
-				imports.add(QUALIFIED_SERVLET_RESPONSE);
-				imports.add(QUALIFIED_FILTER_CHAIN);
-				imports.add(QUALIFIED_IO_EXCEPTION);
-				imports.add(QUALIFIED_SERVLET_EXCEPTION);
+			if (isHttpFilterSuperclass()) {
+				if (SERVLET_5_0.equals(javaEEVersion) || SERVLET_6_0.equals(javaEEVersion)) {
+					imports.add(IServletConstants.QUALIFIED_JAKARTA_HTTP_SERVLET_REQUEST);
+					imports.add(IServletConstants.QUALIFIED_JAKARTA_HTTP_SERVLET_RESPONSE);
+					imports.add(IServletConstants.QUALIFIED_JAKARTA_FILTER_CHAIN);
+					imports.add(QUALIFIED_IO_EXCEPTION);
+					imports.add(IServletConstants.QUALIFIED_JAKARTA_SERVLET_EXCEPTION);
+				}
+				else {
+					imports.add(QUALIFIED_HTTP_SERVLET_REQUEST);
+					imports.add(QUALIFIED_HTTP_SERVLET_RESPONSE);
+					imports.add(QUALIFIED_FILTER_CHAIN);
+					imports.add(QUALIFIED_IO_EXCEPTION);
+					imports.add(QUALIFIED_SERVLET_EXCEPTION);
+				}
+			} else {
+				if (SERVLET_5_0.equals(javaEEVersion) || SERVLET_6_0.equals(javaEEVersion)) {
+					imports.add(IServletConstants.QUALIFIED_JAKARTA_SERVLET_REQUEST);
+					imports.add(IServletConstants.QUALIFIED_JAKARTA_SERVLET_RESPONSE);
+					imports.add(IServletConstants.QUALIFIED_JAKARTA_FILTER_CHAIN);
+					imports.add(QUALIFIED_IO_EXCEPTION);
+					imports.add(IServletConstants.QUALIFIED_JAKARTA_SERVLET_EXCEPTION);
+				}
+				else {
+					imports.add(QUALIFIED_SERVLET_REQUEST);
+					imports.add(QUALIFIED_SERVLET_RESPONSE);
+					imports.add(QUALIFIED_FILTER_CHAIN);
+					imports.add(QUALIFIED_IO_EXCEPTION);
+					imports.add(QUALIFIED_SERVLET_EXCEPTION);
+				}
 			}
 		}
-		if (SERVLET_5_0.equals(javaEEVersion)) {
+		if (SERVLET_5_0.equals(javaEEVersion) || SERVLET_6_0.equals(javaEEVersion)) {
 			imports.add(IServletConstants.QUALIFIED_JAKARTA_WEB_FILTER);
 			if (getInitParams() != null && !getInitParams().isEmpty()) {
 				imports.add(IServletConstants.QUALIFIED_JAKARTA_ANNOTATION_INIT_PARAM);
@@ -307,5 +326,8 @@ public class CreateFilterTemplateModel extends CreateWebClassTemplateModel {
 		return result;
 	}
 	
+	public boolean isHttpFilterSuperclass() {
+		return FilterSupertypesValidator.isHttpFilterSuperclass(dataModel);
+	}	
 }
 

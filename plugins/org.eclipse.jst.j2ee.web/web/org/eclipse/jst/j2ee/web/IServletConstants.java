@@ -52,11 +52,13 @@ public interface IServletConstants {
 	public static final String QUALIFIED_FILTER_CONFIG = "javax.servlet.FilterConfig"; //$NON-NLS-1$
 	public static final String QUALIFIED_FILTER_CHAIN = "javax.servlet.FilterChain"; //$NON-NLS-1$
 	public static final String QUALIFIED_HTTP_FILTER = "javax.servlet.http.HttpFilter"; //$NON-NLS-1$
+	public static final String QUALIFIED_GENERIC_FILTER = "javax.servlet.GenericFilter"; //$NON-NLS-1$
 	
 	public static final String QUALIFIED_JAKARTA_FILTER = "jakarta.servlet.Filter"; //$NON-NLS-1$
 	public static final String QUALIFIED_JAKARTA_FILTER_CONFIG = "jakarta.servlet.FilterConfig"; //$NON-NLS-1$
 	public static final String QUALIFIED_JAKARTA_FILTER_CHAIN = "jakarta.servlet.FilterChain"; //$NON-NLS-1$
 	public static final String QUALIFIED_JAKARTA_HTTP_FILTER = "jakarta.servlet.http.HttpFilter"; //$NON-NLS-1$
+	public static final String QUALIFIED_JAKARTA_GENERIC_FILTER = "jakarta.servlet.GenericFilter"; //$NON-NLS-1$
 	
 	public static final String QUALIFIED_SERVLET_CONTEXT_LISTENER = "javax.servlet.ServletContextListener"; //$NON-NLS-1$
 	public static final String QUALIFIED_SERVLET_CONTEXT_EVENT = "javax.servlet.ServletContextEvent"; //$NON-NLS-1$

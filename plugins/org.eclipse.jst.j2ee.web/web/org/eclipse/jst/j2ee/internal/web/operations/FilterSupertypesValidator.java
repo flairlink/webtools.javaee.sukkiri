@@ -12,23 +12,84 @@ package org.eclipse.jst.j2ee.internal.web.operations;
 
 import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_FILTER;
 import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_JAKARTA_FILTER;
+import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_HTTP_FILTER;
+import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_JAKARTA_HTTP_FILTER;
+import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_GENERIC_FILTER;
+import static org.eclipse.jst.j2ee.web.IServletConstants.QUALIFIED_JAKARTA_GENERIC_FILTER;
 
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 
 public class FilterSupertypesValidator extends AbstractSupertypesValidator {
-	public static boolean isFilterSuperclass(IDataModel dataModel) {
-		if (hasSuperInterface(dataModel, getSuperclass(dataModel), QUALIFIED_FILTER))
+	public static boolean isGenericFilterSuperclass(IDataModel dataModel) {
+		if (QUALIFIED_JAKARTA_HTTP_FILTER.equals(getSuperclass(dataModel)))
 			return true;
+		
+		if (QUALIFIED_HTTP_FILTER.equals(getSuperclass(dataModel)))
+			return true;
+
+		if (QUALIFIED_JAKARTA_GENERIC_FILTER.equals(getSuperclass(dataModel)))
+			return true;
+
+		if (QUALIFIED_GENERIC_FILTER.equals(getSuperclass(dataModel)))
+			return true;
+		
+		if (hasSuperclass(dataModel, getSuperclass(dataModel), QUALIFIED_JAKARTA_GENERIC_FILTER))
+			return true;
+
+		if (hasSuperclass(dataModel, getSuperclass(dataModel), QUALIFIED_GENERIC_FILTER))
+			return true;
+		
+		return false;
+	}
+
+	public static boolean isHttpFilterSuperclass(IDataModel dataModel) {
+		if (QUALIFIED_JAKARTA_HTTP_FILTER.equals(getSuperclass(dataModel)))
+			return true;
+
+		if (QUALIFIED_HTTP_FILTER.equals(getSuperclass(dataModel)))
+			return true;
+
+		if (hasSuperclass(dataModel, getSuperclass(dataModel), QUALIFIED_JAKARTA_HTTP_FILTER))
+			return true;
+
+		if (hasSuperclass(dataModel, getSuperclass(dataModel), QUALIFIED_HTTP_FILTER))
+			return true;
+
+		return false;
+	}
+
+	public static boolean isFilterSuperclass(IDataModel dataModel) {
+		if (QUALIFIED_JAKARTA_HTTP_FILTER.equals(getSuperclass(dataModel)))
+			return true;
+		
+		if (QUALIFIED_HTTP_FILTER.equals(getSuperclass(dataModel)))
+			return true;
+		
+		if (QUALIFIED_JAKARTA_GENERIC_FILTER.equals(getSuperclass(dataModel)))
+			return true;
+		
+		if (QUALIFIED_GENERIC_FILTER.equals(getSuperclass(dataModel)))
+			return true;
+		
+		if (getInterfaces(dataModel).contains(QUALIFIED_JAKARTA_FILTER))
+			return true;
+		
+		if (getInterfaces(dataModel).contains(QUALIFIED_FILTER))
+			return true;
+		
 		if (hasSuperInterface(dataModel, getSuperclass(dataModel), QUALIFIED_JAKARTA_FILTER))
 			return true;
-
+		
+		if (hasSuperInterface(dataModel, getSuperclass(dataModel), QUALIFIED_FILTER))
+			return true;
+		
 		for (Object iface : getInterfaces(dataModel)) {
-			if (hasSuperInterface(dataModel, (String) iface, QUALIFIED_FILTER)) 
-				return true;
 			if (hasSuperInterface(dataModel, (String) iface, QUALIFIED_JAKARTA_FILTER)) 
 				return true;
+			if (hasSuperInterface(dataModel, (String) iface, QUALIFIED_FILTER)) 
+				return true;
 		}
-
+		
 		return false;
 	}
 }
